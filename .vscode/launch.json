@@ -1,0 +1,19 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "type": "node",
+        "request": "launch",
+        "name": "Launch Demo",
+        "runtimeArgs": [
+          "-r",
+          "tsconfig-paths/register"
+        ],
+        "args": [
+          "${workspaceFolder}/examples/simpleCoder.ts"
+        ],
+        "runtimeExecutable": "ts-node",
+      }
+    ]
+  }
+  
