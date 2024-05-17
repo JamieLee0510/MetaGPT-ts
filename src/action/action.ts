@@ -1,3 +1,4 @@
+import { OPENAI_KEY } from "../utils/keys";
 import OpenAI from "openai";
 
 export class Action {
@@ -7,7 +8,7 @@ export class Action {
   constructor(name: string, promptTemplate?: string) {
     this.name = name;
     // TODO: current use openai sdk
-    this.llmClient = new OpenAI({ apiKey: process.env.OPENAI_KEY });
+    this.llmClient = new OpenAI({ apiKey: OPENAI_KEY });
     this.promptTemplate = promptTemplate
       ? promptTemplate
       : "You are a helpful assistant.";
@@ -27,5 +28,9 @@ export class Action {
 
   generatePrompt(stringFlag: string) {
     return this.promptTemplate.replace(`stringFlag`, stringFlag);
+  }
+
+  async run(instruction: string): Promise<string> {
+    return "hihi";
   }
 }

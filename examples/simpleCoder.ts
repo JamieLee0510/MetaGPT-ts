@@ -7,6 +7,7 @@
 
 import { Action } from "metagpt/action/action";
 import { Role } from "metagpt/role/role";
+import { Message } from "metagpt/schema/message";
 
 class WriteSimpleCode extends Action {
   promptTemplate: string;
@@ -36,8 +37,25 @@ class WriteSimpleCode extends Action {
 class SimpleCoder extends Role {
   constructor() {
     super({ name: "Alice", profile: "SimpleCoder" });
-    this._initActions([new WriteSimpleCode()]);
+    this.setActions([new WriteSimpleCode()]);
   }
 
-  async _act() {}
+  async _act() {
+    const todo = this.roleContext.todo;
+    const msg = this.getMemories()[0];
+
+    const codeText = await todo!.run(msg.content as string);
+    const newMsg = new Message(codeText);
+
+    return newMsg;
+  }
 }
+
+const startJob = async () => {
+  const userMsg = "write a function that caculates the sum of a list";
+  const simpleColder = new SimpleCoder();
+  const result = await simpleColder.run(userMsg);
+  console.log("---result", result);
+};
+
+startJob();
