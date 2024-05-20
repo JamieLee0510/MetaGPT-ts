@@ -26,10 +26,6 @@ export class Action {
     return data;
   }
 
-  generatePrompt(stringFlag: string) {
-    return this.promptTemplate.replace(`stringFlag`, stringFlag);
-  }
-
   async run(instruction: string): Promise<string> {
     return "hihi";
   }
