@@ -36,6 +36,10 @@ export class Role {
     this.actions = [...actionArr];
   }
 
+  setReactMode(mode: RoleReactMode) {
+    this.roleContext.reactMode = mode;
+  }
+
   async run(withMsg?: any) {
     let msg = null;
 
@@ -47,7 +51,9 @@ export class Role {
       }
     }
 
-    // 觀察，將該role所需要的message都處理，形成news；把最新的news放到 this.latestObervedMsg
+    // 觀察，並根據觀察結果進行「思考」和「行動」
+    // 將該role所需要的message都處理，
+    // 形成news；把最新的news放到 this.latestObervedMsg
     await this._observe();
 
     const result = await this.act(); // MetaGPT python版是寫 react()
@@ -105,13 +111,16 @@ export class Role {
       case RoleReactMode.REACT:
         result = await this._react();
         break;
-
-      // TODO: other ToleReactMode
+      case RoleReactMode.BY_ORDER:
+        result = await this._actByOrder();
+      default:
+        result = await this._react();
+        break;
     }
 
     this._setState(-1); // current reaction is complete, reset state to -1
 
-    return result;
+    return result as Message;
   }
 
   _setState(state: number) {
@@ -158,6 +167,18 @@ export class Role {
 
     // return the output from the last action
     return result;
+  }
+
+  async _actByOrder() {
+    console.log("act by order");
+    const startIdx = this.roleContext.state >= 0 ? this.roleContext.state : 0;
+    let resMsg = new Message("No actions taken yet");
+    for (let i = startIdx; i < this.actions.length; i++) {
+      this._setState(i);
+      resMsg = await this._act();
+    }
+
+    return resMsg;
   }
 
   /**

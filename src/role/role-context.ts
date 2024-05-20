@@ -46,13 +46,4 @@ class RoleContext {
   }
 }
 
-export {
-  RoleContext,
-  ConfigDict,
-  Environment,
-  MessageQueue,
-  Memory,
-  Action,
-  Message,
-  RoleReactMode,
-};
+export { RoleContext, ConfigDict, Environment, MessageQueue, RoleReactMode };
