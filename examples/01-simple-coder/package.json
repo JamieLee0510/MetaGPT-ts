@@ -1,0 +1,11 @@
+{
+  "name": "01-simple-coder",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "example-1": "ts-node -r tsconfig-paths/register simple-coder.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
