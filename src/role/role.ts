@@ -14,7 +14,7 @@
 
 import { Message } from "metagpt/schema/message";
 import { Action } from "../action/action";
-import { RoleContext, RoleReactMode } from "./role-context";
+import { Environment, RoleContext, RoleReactMode } from "./role-context";
 
 export class Role {
   name: string;
@@ -208,5 +208,9 @@ export class Role {
    */
   getMemories(k = 0) {
     return this.roleContext.memory.get(k);
+  }
+
+  setEnv(env: Environment) {
+    this.roleContext.env = env;
   }
 }
