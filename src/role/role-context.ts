@@ -1,13 +1,10 @@
 import { Memory } from "../schema/memory";
 import { Message } from "../schema/message";
 import { Action } from "../action/action";
+import { Environment } from "../environment/environment";
 
 interface ConfigDict {
   arbitraryTypesAllowed: boolean;
-}
-
-interface Environment {
-  // Define Environment properties and methods here
 }
 
 class MessageQueue {
