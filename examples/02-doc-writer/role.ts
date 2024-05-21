@@ -1,7 +1,5 @@
-import { Role } from "metagpt/role/role";
+import { Role, RoleReactMode, Message } from "metagpt";
 import { WriteContent, WriteDirectory } from "./action";
-import { RoleReactMode } from "metagpt/role/role-context";
-import { Message } from "metagpt/schema/message";
 import { DirectoryStructure } from "./type";
 
 export class TutorialAssistant extends Role {

@@ -13,8 +13,8 @@
     "outDir": "dist",
     "baseUrl": "./",
     "paths": {
-      "metagpt/*": ["src/*"],
-      "metagpt": ["src/index.ts"],
+      "metagpt/*": ["dist/*"],
+      "metagpt": ["dist"],
     },
   },
   "exclude": ["node_modules"],

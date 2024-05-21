@@ -1,4 +1,4 @@
-import { Role } from "metagpt/role/role";
+import { Role } from "../role";
 
 /**
  * Environment, hosting a batch of roles, and roles can publish message

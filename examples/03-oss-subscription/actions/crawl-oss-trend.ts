@@ -1,6 +1,6 @@
 // use nodejs crawler to analysis `https://github.com/trending/javascript?since=daily`
 
-import { Action } from "metagpt/action/action";
+import { Action } from "metagpt";
 import puppeteer from "puppeteer";
 
 export class CrawlOSSTrending extends Action {

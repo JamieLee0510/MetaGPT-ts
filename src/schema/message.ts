@@ -1,4 +1,4 @@
-import { MESSAGE_ROUTE_TO_ALL } from "metagpt/utils/msg-const";
+import { MESSAGE_ROUTE_TO_ALL } from "../utils/msg-const";
 import { v4 as uuidV4 } from "uuid";
 
 export class Message {
