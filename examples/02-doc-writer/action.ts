@@ -1,4 +1,4 @@
-import { Action } from "metagpt/action/action";
+import { Action } from "metagpt";
 
 export class WriteDirectory extends Action {
   COMMOM_PROMPT: string;

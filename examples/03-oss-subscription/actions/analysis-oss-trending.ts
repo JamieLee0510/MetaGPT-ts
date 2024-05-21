@@ -1,4 +1,4 @@
-import { Action } from "metagpt/action/action";
+import { Action } from "metagpt";
 
 export class AnalysisOSSTrending extends Action {
   TENDING_ANALYSIS_PROMPT = `

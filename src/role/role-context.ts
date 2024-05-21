@@ -7,10 +7,6 @@ interface ConfigDict {
   arbitraryTypesAllowed: boolean;
 }
 
-class MessageQueue {
-  // Define MessageQueue properties and methods here
-}
-
 enum RoleReactMode {
   REACT = "react", // ReAct論文的 ‘思考-行動’循環來執行，即 _think -> _act -> _think -> _act ...
   BY_ORDER = "by_order", // 照指定的Action順序執行
@@ -43,4 +39,4 @@ class RoleContext {
   }
 }
 
-export { RoleContext, ConfigDict, Environment, MessageQueue, RoleReactMode };
+export { RoleContext, ConfigDict, Environment, RoleReactMode };

@@ -1,8 +1,6 @@
-import { Role } from "metagpt/role/role";
+import { Role, RoleReactMode, Message } from "metagpt";
 import { AnalysisOSSTrending } from "./actions/analysis-oss-trending";
 import { CrawlOSSTrending } from "./actions/crawl-oss-trend";
-import { RoleReactMode } from "metagpt/role/role-context";
-import { Message } from "metagpt/schema/message";
 
 export class OssWatcher extends Role {
   constructor() {

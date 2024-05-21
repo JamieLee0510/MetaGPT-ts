@@ -12,7 +12,7 @@
  *
  */
 
-import { Message } from "metagpt/schema/message";
+import { Message } from "../schema/message";
 import { Action } from "../action/action";
 import { Environment, RoleContext, RoleReactMode } from "./role-context";
 
