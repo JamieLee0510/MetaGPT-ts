@@ -10,7 +10,7 @@
           "tsconfig-paths/register"
         ],
         "args": [
-          "${workspaceFolder}/examples/02-doc-writer/index.ts"
+          "${workspaceFolder}/examples/03-oss-subscription/index.ts"
         ],
         "runtimeExecutable": "ts-node",
       }
