@@ -17,7 +17,7 @@ export class Action {
   async getResultFromLLM(prompt: string) {
     const response = await this.llmClient.chat.completions.create({
       messages: [
-        { role: "system", content: "You are a helpful assistant." },
+        { role: "system", content: this.promptTemplate },
         { role: "user", content: prompt },
       ],
       model: "gpt-3.5-turbo",
