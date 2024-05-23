@@ -11,10 +11,12 @@
  *
  *
  */
+import OpenAI from "openai";
 
-import { Message } from "../schema/message";
-import { Action } from "../action/action";
+import { Message } from "src/schema/message";
+import { Action } from "src/action/action";
 import { Environment, RoleContext, RoleReactMode } from "./role-context";
+import { OPENAI_KEY } from "src/utils/keys";
 
 export class Role {
   name: string;
@@ -22,6 +24,7 @@ export class Role {
   actions: Action[]; // 等等，它是從roleContext中拿的，而不是本身的
   roleContext: RoleContext;
   latestObservedMsg: Message | null;
+  llmClient: OpenAI; // TODO: 目前先用openai client
 
   constructor({ name, profile }: { name: string; profile: string }) {
     this.name = name;
@@ -29,6 +32,7 @@ export class Role {
     this.actions = [];
     this.roleContext = new RoleContext();
     this.latestObservedMsg = null;
+    this.llmClient = new OpenAI({ apiKey: OPENAI_KEY });
   }
 
   setActions(actionArr: Action[]) {
@@ -46,7 +50,7 @@ export class Role {
     // 把user msg 放到 roleContext的 message buffer å中
     if (withMsg) {
       if (typeof withMsg == "string") {
-        msg = new Message(withMsg);
+        msg = new Message({ content: withMsg });
         this.putMessage(msg);
       }
     }
@@ -172,7 +176,7 @@ export class Role {
   async _actByOrder() {
     console.log("act by order");
     const startIdx = this.roleContext.state >= 0 ? this.roleContext.state : 0;
-    let resMsg = new Message("No actions taken yet");
+    let resMsg = new Message({ content: "No actions taken yet" });
     for (let i = startIdx; i < this.actions.length; i++) {
       this._setState(i);
       resMsg = await this._act();
@@ -192,11 +196,13 @@ export class Role {
       this._setState(0);
       return;
     }
+    // TODO: ReAct prompt engineering
+    let reactPrompt = "";
   }
 
   // TODO: 這裡好像會被overwrite,在simple coder的例子中
   async _act(): Promise<Message> {
-    const message = new Message("hihi");
+    const message = new Message({ content: "hihi" });
     return message;
   }
 
@@ -212,5 +218,17 @@ export class Role {
 
   setEnv(env: Environment) {
     this.roleContext.env = env;
+  }
+
+  /**
+   * Watch Actions of interest.
+   * Role will select Messages caused by these Actions from its personal messages buffer
+   * during _observe()
+   * @param actions
+   */
+  _watch(actions: (new () => Action)[]) {
+    actions.forEach((action) => {
+      this.roleContext.watch.add(action.name);
+    });
   }
 }
