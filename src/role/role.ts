@@ -95,10 +95,27 @@ export class Role {
     // news為初始化空array
     // 檢查 recovered狀態，如果true，則要將最新觀察到的消息，放到news列表；
     // 如果news仍然為空，則從消息緩衝區（rolecontext.msg_buffer）彈出所有消息
+    // TODO: this.recovered 相關
     const news = [...this.roleContext.msgBuffer];
     this.roleContext.msgBuffer = []; // TODO: 需要新增一個 popAll()
-    //
+
     this.roleContext.memory.addBatch(news);
+
+    this.roleContext.news = news.filter((msg) => {
+      const causeBy = msg.causeBy;
+      const sendTo = msg.sendTo;
+
+      // TODO: need to filter from old-messages
+
+      if (causeBy && this.roleContext.watch.has(causeBy)) {
+        return true;
+      }
+      if (sendTo && this.name === sendTo) {
+        return true;
+      }
+
+      return false;
+    });
 
     // 篩選，防止重複處理；同時過濾，只拿到感興趣、或者發送給當前對象的消息
     // self.rc.news = [ n for n in news if (n.cause_by in self.rc.watch or self.name in n.send_to) and n not in old_messages]
@@ -106,6 +123,7 @@ export class Role {
 
     // 在這個時候，roleContext中的msgBuffer已經有 user input
 
+    // TODO: 理論上應該不用return東西？因為_observe() 應該只是觀察並操作到roleContext
     return 1;
   }
 
