@@ -4,6 +4,6 @@
 
     "rootDir": "./"
   },
-  "include": ["./*", "original-react-prompt/index.ts"]
+  "include": ["./**/*",]
 }
   
