@@ -1,4 +1,4 @@
-import { SERPER_KEY } from "./const";
+import { SERPER_KEY, OPENAI_KEY } from "./const";
 import axios from "axios";
 
 export type ToolConfig = {
@@ -40,6 +40,7 @@ export class Tool {
   }
 
   async googleSearch(searchQuery: string) {
+    const query = JSON.parse(searchQuery)["search_query"];
     const config = {
       method: "post",
       url: "https://google.serper.dev/search",
@@ -47,9 +48,10 @@ export class Tool {
         "X-API-KEY": SERPER_KEY,
         "Content-Type": "application/json",
       },
-      data: JSON.stringify({ q: searchQuery }),
+      data: JSON.stringify({ q: query }),
     };
     const res = await axios(config);
+    console.log(res);
     return res.data["organic"][0]["snippet"];
   }
 }

@@ -10,7 +10,7 @@
           "tsconfig-paths/register"
         ],
         "args": [
-          "${workspaceFolder}/examples/03-oss-subscription/index.ts"
+          "${workspaceFolder}/examples/02-react-action/original-react-prompt/index.ts"
         ],
         "runtimeExecutable": "ts-node",
       }

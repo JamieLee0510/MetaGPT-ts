@@ -61,9 +61,11 @@ export class Agent {
   }
 
   async callPlugin(pluginName: string, pluginArgs: string) {
+    let data = "";
     if (pluginName == "google_search") {
-      return await this.tool.googleSearch(pluginArgs);
+      data = await this.tool.googleSearch(pluginArgs);
     }
+    return data;
   }
 
   async textCompletion(inputText: string, history: string[] = []) {
@@ -81,7 +83,7 @@ export class Agent {
     const { pluginName, pluginArgs, text } =
       this.parseLatestPluginCall(responseText);
     if (pluginName) {
-      responseText += await this.callPlugin(pluginArgs, pluginArgs);
+      responseText += await this.callPlugin(pluginName, pluginArgs);
     }
 
     const newMessages = [
