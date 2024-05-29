@@ -55,7 +55,7 @@ const startJob = async () => {
   const userMsg = "write a function that caculates the sum of a list";
   const simpleColder = new SimpleCoder();
   const result = await simpleColder.run(userMsg);
-  console.log(result.content);
+  console.log(result!.content);
 };
 
 startJob();

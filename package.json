@@ -1,17 +1,22 @@
 {
   "name": "metagpt-ts",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "The Multi-Agent Framework",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
   "scripts": {
     "clean": "rimraf ./dist",
     "start": "ts-node ./src/index.ts",
     "test": "ts-node ./examples/simpleCoder.ts",
     "build": "pnpm clean && tsup"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "metagpt",
+    "agent"
+  ],
+  "author": "jamielee",
+  "license": "MIT",
   "devDependencies": {
     "@types/node": "^20.12.12",
     "@types/uuid": "^9.0.8",
