@@ -24,10 +24,10 @@ export class Role {
   profile: string;
   desc: string;
   goal: string;
-  actions: Action[]; // 等等，它是從roleContext中拿的，而不是本身的
+  actions: Action[];
   roleContext: RoleContext;
   latestObservedMsg: Message | null;
-  llmClient: OpenAI; // TODO: 目前先用openai client
+  llmClient: OpenAI; // TODO: currently using OpenAI SDK
   isRecovered: boolean;
 
   constructor({
@@ -53,7 +53,7 @@ export class Role {
   }
 
   setActions(actionArr: Action[]) {
-    // TODO: 原本python版本有點複雜，先簡單複製（像是還需要set_llm）
+    // TODO: should compare with offical python version
     this.actions = [...actionArr];
   }
 
@@ -150,9 +150,6 @@ export class Role {
       ? this.roleContext.news[this.roleContext.news.length - 1]
       : null;
 
-    // 在這個時候，roleContext中的msgBuffer已經有 user input
-
-    // TODO: 理論上應該不用return東西？因為_observe() 應該只是觀察並操作到roleContext
     return this.roleContext.news.length;
   }
 
@@ -190,7 +187,7 @@ export class Role {
    */
   setTodo(todo: Action | null) {
     if (todo) {
-      //TODO: 原本python是寫 value.context = this.context， 但不太懂
+      //TODO: context related
     }
     this.roleContext.todo = todo;
   }
@@ -211,7 +208,6 @@ export class Role {
       await this._think();
       if (!this.roleContext.todo) break;
 
-      // 執行_act(), 不過在自定義Role的時候，可能會overwrite
       result = await this._act();
       actionCounts++;
     }
@@ -261,7 +257,7 @@ export class Role {
     });
   }
 
-  // TODO: 這裡好像會被overwrite,在simple coder的例子中
+  // might overwrite while Instantiating
   async _act(): Promise<Message> {
     const message = new Message({ content: "hihi" });
     return message;

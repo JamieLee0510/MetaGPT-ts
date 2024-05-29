@@ -9,21 +9,21 @@ interface ConfigDict {
 }
 
 enum RoleReactMode {
-  REACT = "react", // ReAct論文的 ‘思考-行動’循環來執行，即 _think -> _act -> _think -> _act ...
-  BY_ORDER = "by_order", // 照指定的Action順序執行
-  PLAN_AND_ACT = "plan_and_act", //一次思考後執行多個動作，即 _think -> _act -> _act -> _act ...
+  REACT = "react", // ex: _think -> _act -> _think -> _act ...
+  BY_ORDER = "by_order", // ex: _act by ordery
+  PLAN_AND_ACT = "plan_and_act", // ex: _think -> _act -> _act -> _act ...
 }
 
 class RoleContext {
-  modelConfig: ConfigDict;
-  env?: Environment; // 在Environment添加Role時，同時會設置Role對Environment的引用
-  msgBuffer: MessageQueue; // 提供異步的pop/push方法，Role透過這個MessageQueue來跟其他Role進行交互
-  memory: Memory; // 記憶對象。當Role執行 _act 時，會將響應結果轉換為Memory物件、放入memory中；btw，當Role執行_observe時，會將MsgBuffer裡面的所有消息轉移到Memory中
-  state: number; // 紀錄Role的執行狀態， init為-1；當全部Action執行完後，也會重置為-1
-  todo: Action | null; // 下一個待執行的Action。當state>=0時，會指向下一個Action
-  watch: Set<string>; // 用字符串表示當前Role觀察的Action列表，（目前用在 _observe 獲取 news 時進行消息過濾）
-  news: Array<Message>; // 存儲哪些在本次執行 _observe 時讀取到的於當前Role上下文相關的消息
-  reactMode: RoleReactMode; // ReAct循環的模式。
+  modelConfig: ConfigDict; // TODO: need to refer original python version
+  env?: Environment; // if there is an Envirionment, Role will refer the Environment instance
+  msgBuffer: MessageQueue; // providing async/sync pop and push methods. Role will interact with other roles through this.
+  memory: Memory; // TODO: need to refer original python version
+  state: number; // recording Role execiting situation. will be `-1` while no Action need to be executed
+  todo: Action | null; // next Action which will be executed while `state >=0`
+  watch: Set<string>; // for filtering msg in _observe() process
+  news: Array<Message>; // in _observe() process, storing messages in this executing batch
+  reactMode: RoleReactMode; // acting mode
   maxReactLoop: number;
 
   constructor() {
