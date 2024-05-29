@@ -2,6 +2,7 @@ import { Memory } from "../schema/memory";
 import { Message } from "../schema/message";
 import { Action } from "../action/action";
 import { Environment } from "../environment/environment";
+import { MessageQueue } from "src/schema/message-queue";
 
 interface ConfigDict {
   arbitraryTypesAllowed: boolean;
@@ -16,7 +17,7 @@ enum RoleReactMode {
 class RoleContext {
   modelConfig: ConfigDict;
   env?: Environment; // 在Environment添加Role時，同時會設置Role對Environment的引用
-  msgBuffer: Array<Message>; // 提供異步的pop/push方法，Role透過這個MessageQueue來跟其他Role進行交互
+  msgBuffer: MessageQueue; // 提供異步的pop/push方法，Role透過這個MessageQueue來跟其他Role進行交互
   memory: Memory; // 記憶對象。當Role執行 _act 時，會將響應結果轉換為Memory物件、放入memory中；btw，當Role執行_observe時，會將MsgBuffer裡面的所有消息轉移到Memory中
   state: number; // 紀錄Role的執行狀態， init為-1；當全部Action執行完後，也會重置為-1
   todo: Action | null; // 下一個待執行的Action。當state>=0時，會指向下一個Action
@@ -28,7 +29,7 @@ class RoleContext {
   constructor() {
     this.modelConfig = { arbitraryTypesAllowed: true };
     this.env = undefined;
-    this.msgBuffer = [];
+    this.msgBuffer = new MessageQueue();
     this.memory = new Memory();
     this.state = -1;
     this.todo = null;
@@ -36,6 +37,10 @@ class RoleContext {
     this.news = [];
     this.reactMode = RoleReactMode.REACT;
     this.maxReactLoop = 1;
+  }
+
+  history() {
+    return this.memory.get(0);
   }
 }
 

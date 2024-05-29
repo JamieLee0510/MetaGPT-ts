@@ -45,7 +45,7 @@ class SimpleCoder extends Role {
     const msg = this.getMemories()[0];
 
     const codeText = await todo!.run(msg.content as string);
-    const newMsg = new Message(codeText);
+    const newMsg = new Message({ content: codeText });
 
     return newMsg;
   }

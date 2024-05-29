@@ -4,9 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "clean": "rimraf ./dist",
     "start": "ts-node ./src/index.ts",
     "test": "ts-node ./examples/simpleCoder.ts",
-    "build": "tsup"
+    "build": "pnpm clean && tsup"
   },
   "keywords": [],
   "author": "",

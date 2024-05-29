@@ -14,7 +14,7 @@ export class OssWatcher extends Role {
     let msg = this.getMemories(1)[0];
 
     const result = await todo!.run(msg.content);
-    msg = new Message(result);
+    msg = new Message({ content: result });
     //this.roleContext.memory.add(msg)
 
     return msg;

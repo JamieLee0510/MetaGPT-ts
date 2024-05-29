@@ -35,7 +35,7 @@ export class TutorialAssistant extends Role {
     }
     this.totalContent += directoryContent;
 
-    return new Message(directoryContent);
+    return new Message({ content: directoryContent });
   }
 
   async _handleDirectory(directoryStructure: DirectoryStructure) {

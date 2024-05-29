@@ -3,7 +3,7 @@ import OpenAI from "openai";
 
 export class Action {
   name: string;
-  llmClient: OpenAI;
+  llmClient: OpenAI; // TODO: 目前先用openai client
   promptTemplate: string;
   constructor(name: string, promptTemplate?: string) {
     this.name = name;
