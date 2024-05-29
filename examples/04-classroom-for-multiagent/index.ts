@@ -10,7 +10,7 @@ import { Teacher } from "./roles/teacher";
 const classroom = new Environment({});
 const user = new UserRequirement();
 
-const main = async (topic: string) => {
+const main = async (topic: string, nRound = 3) => {
   classroom.addRoles([new Student(), new Teacher(), new Teacher()]);
   classroom.publishMessage(
     new Message({
@@ -20,7 +20,11 @@ const main = async (topic: string) => {
       sendTo: MESSAGE_ROUTE_TO_ALL,
     }),
   );
-  await classroom.run();
+  while (nRound > 0) {
+    await classroom.run();
+    nRound--;
+  }
+  console.log(classroom.history);
 };
 
 main("wirte a poem about moon");
