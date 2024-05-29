@@ -10,15 +10,20 @@ export class Student extends Role {
   }
 
   async _act() {
+    console.log("--student act");
     let todo = this.roleContext.todo;
     const allMsg = this.getMemories(); // 獲取所有記憶
     const allMsgText = allMsg.reduce((acc, curr) => {
-      return (acc += curr);
+      return (acc += curr.content);
     }, "");
     const poemText = await new WritePoem().run(allMsgText);
 
     // TODO: Message 除了content str之外，還需要加上 role、causeBy(todo type)等等
-    const newMsg = new Message({ content: poemText });
+    const newMsg = new Message({
+      content: poemText,
+      role: this.profile,
+      causeBy: typeof todo,
+    });
     return newMsg;
   }
 }

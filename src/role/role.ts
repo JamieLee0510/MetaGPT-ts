@@ -17,22 +17,39 @@ import { Message } from "src/schema/message";
 import { Action } from "src/action/action";
 import { Environment, RoleContext, RoleReactMode } from "./role-context";
 import { OPENAI_KEY } from "src/utils/keys";
+import { generatePrefixPrompt, generateStatePrompt } from "src/utils/prompt";
 
 export class Role {
   name: string;
   profile: string;
+  desc: string;
+  goal: string;
   actions: Action[]; // 等等，它是從roleContext中拿的，而不是本身的
   roleContext: RoleContext;
   latestObservedMsg: Message | null;
   llmClient: OpenAI; // TODO: 目前先用openai client
+  isRecovered: boolean;
 
-  constructor({ name, profile }: { name: string; profile: string }) {
+  constructor({
+    name,
+    profile,
+    desc,
+    goal,
+  }: {
+    name: string;
+    profile: string;
+    desc?: string;
+    goal?: string;
+  }) {
     this.name = name;
     this.profile = profile;
+    this.desc = desc ? desc : "";
+    this.goal = goal ? goal : "";
     this.actions = [];
     this.roleContext = new RoleContext();
     this.latestObservedMsg = null;
     this.llmClient = new OpenAI({ apiKey: OPENAI_KEY });
+    this.isRecovered = false; // TODO:
   }
 
   setActions(actionArr: Action[]) {
@@ -49,16 +66,19 @@ export class Role {
 
     // 把user msg 放到 roleContext的 message buffer å中
     if (withMsg) {
+      // TODO:
       if (typeof withMsg == "string") {
         msg = new Message({ content: withMsg });
         this.putMessage(msg);
       }
     }
-
+    console.log(this.roleContext.memory);
     // 觀察，並根據觀察結果進行「思考」和「行動」
     // 將該role所需要的message都處理，
     // 形成news；把最新的news放到 this.latestObervedMsg
-    await this._observe();
+    const observeResult = await this._observe();
+    // 假如沒有觀察到要處理的msg，就return （waiting的狀態）
+    if (observeResult <= 0) return;
 
     const result = await this.act(); // MetaGPT python版是寫 react()
     // self.set_todo(None)
@@ -84,28 +104,35 @@ export class Role {
     if (!msg) return;
 
     // If env does not exist, do not publish the message
-    // this.roleContext.env.publishMsg(msg)
+    if (this.roleContext.env) {
+      this.roleContext.env.publishMessage(msg);
+    }
   }
 
   /**
    * Prepare new messages for processing
    * from the message buffer and other sources.
    */
-  async _observe(): Promise<number> {
+  async _observe(shouldIgoreMsg: boolean = false): Promise<number> {
     // news為初始化空array
-    // 檢查 recovered狀態，如果true，則要將最新觀察到的消息，放到news列表；
-    // 如果news仍然為空，則從消息緩衝區（rolecontext.msg_buffer）彈出所有消息
-    // TODO: this.recovered 相關
-    const news = [...this.roleContext.msgBuffer];
-    this.roleContext.msgBuffer = []; // TODO: 需要新增一個 popAll()
-
+    let news: Message[] = [];
+    if (this.isRecovered && this.latestObservedMsg) {
+      news = [this.latestObservedMsg];
+    }
+    if (!news.length) {
+      news = this.roleContext.msgBuffer.popAll();
+    }
+    const oldMessages = shouldIgoreMsg ? [] : this.roleContext.memory.get(0);
     this.roleContext.memory.addBatch(news);
 
+    // Filter out messages of interest.
     this.roleContext.news = news.filter((msg) => {
       const causeBy = msg.causeBy;
       const sendTo = msg.sendTo;
 
-      // TODO: need to filter from old-messages
+      if (oldMessages.includes(msg)) {
+        return false;
+      }
 
       if (causeBy && this.roleContext.watch.has(causeBy)) {
         return true;
@@ -117,14 +144,15 @@ export class Role {
       return false;
     });
 
-    // 篩選，防止重複處理；同時過濾，只拿到感興趣、或者發送給當前對象的消息
-    // self.rc.news = [ n for n in news if (n.cause_by in self.rc.watch or self.name in n.send_to) and n not in old_messages]
-    this.latestObservedMsg = news[-1];
+    // record the latest oberved msg
+    this.latestObservedMsg = this.roleContext.news.length
+      ? this.roleContext.news[this.roleContext.news.length - 1]
+      : null;
 
     // 在這個時候，roleContext中的msgBuffer已經有 user input
 
     // TODO: 理論上應該不用return東西？因為_observe() 應該只是觀察並操作到roleContext
-    return 1;
+    return news.length;
   }
 
   async act() {
@@ -215,7 +243,22 @@ export class Role {
       return;
     }
     // TODO: ReAct prompt engineering
-    let reactPrompt = "";
+    let reactPrompt = this._getPrefix();
+    reactPrompt += generateStatePrompt({
+      history: JSON.stringify(this.roleContext.history()),
+      previousState: "",
+      states: `\n ${this.actions.length}`,
+      nStates: `\n ${this.actions.length - 1}`,
+    });
+
+    // state 會是數字
+    const nextState = await this.llmClient.chat.completions.create({
+      messages: [
+        { role: "system", content: "You are a helpful assistant." },
+        { role: "user", content: reactPrompt },
+      ],
+      model: "gpt-3.5-turbo",
+    });
   }
 
   // TODO: 這裡好像會被overwrite,在simple coder的例子中
@@ -248,5 +291,18 @@ export class Role {
     actions.forEach((action) => {
       this.roleContext.watch.add(action.name);
     });
+  }
+
+  _getPrefix() {
+    if (this.desc) return this.desc;
+    let prefix = generatePrefixPrompt({
+      profile: this.profile,
+      name: this.name,
+      goal: this.goal,
+    });
+
+    // TODO: this.constraints && this.roleContext.env && this.roleContext.env.desc
+
+    return prefix;
   }
 }

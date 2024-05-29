@@ -9,8 +9,8 @@ import { MESSAGE_ROUTE_TO_ALL } from "src/utils/msg-const";
 export class Environment {
   desc: string; // the description of this environment
   roles: Map<string, Role>;
-  constructor({ desc }: { desc: string }) {
-    this.desc = desc;
+  constructor({ desc }: { desc?: string }) {
+    this.desc = desc ? desc : "";
     this.roles = new Map();
   }
 
@@ -20,14 +20,17 @@ export class Environment {
    */
   async run(k = 1) {
     if (this.roles) {
-      for (let i = 0; i < k; i++) {
-        const futures = [];
-
-        for (let role of Object.values(this.roles)) {
-          const future = role.run();
-          futures.push(future);
+      try {
+        for (let i = 0; i < k; i++) {
+          const futures = [];
+          for (let role of this.roles.values()) {
+            const future = role.run();
+            futures.push(future);
+          }
+          await Promise.all(futures);
         }
-        await Promise.all(futures);
+      } catch (err) {
+        console.log(err);
       }
     }
   }

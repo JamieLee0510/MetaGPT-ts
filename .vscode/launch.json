@@ -10,7 +10,7 @@
           "tsconfig-paths/register"
         ],
         "args": [
-          "${workspaceFolder}/examples/02-react-action/original-react-prompt/index.ts"
+          "${workspaceFolder}/examples/04-classroom-for-multiagent/index.ts"
         ],
         "runtimeExecutable": "ts-node",
       }

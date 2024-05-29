@@ -33,5 +33,3 @@ export class Message {
     this.causeBy = causeBy;
   }
 }
-
-export class MessageQueue {}
