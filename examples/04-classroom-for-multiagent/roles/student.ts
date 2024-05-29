@@ -10,7 +10,6 @@ export class Student extends Role {
   }
 
   async _act() {
-    console.log("--student act");
     let todo = this.roleContext.todo;
     const allMsg = this.getMemories(); // 獲取所有記憶
     const allMsgText = allMsg.reduce((acc, curr) => {
@@ -22,7 +21,7 @@ export class Student extends Role {
     const newMsg = new Message({
       content: poemText,
       role: this.profile,
-      causeBy: typeof todo,
+      causeBy: todo?.constructor.name,
     });
     return newMsg;
   }

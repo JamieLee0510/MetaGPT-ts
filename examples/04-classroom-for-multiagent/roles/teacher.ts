@@ -21,7 +21,7 @@ export class Teacher extends Role {
     const newMsg = new Message({
       content: poemText,
       role: this.profile,
-      causeBy: typeof todo,
+      causeBy: todo?.constructor.name,
     });
     return newMsg;
   }

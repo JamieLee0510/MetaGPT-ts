@@ -72,17 +72,18 @@ export class Role {
         this.putMessage(msg);
       }
     }
-    console.log(this.roleContext.memory);
     // 觀察，並根據觀察結果進行「思考」和「行動」
     // 將該role所需要的message都處理，
     // 形成news；把最新的news放到 this.latestObervedMsg
     const observeResult = await this._observe();
+
     // 假如沒有觀察到要處理的msg，就return （waiting的狀態）
     if (observeResult <= 0) return;
 
     const result = await this.act(); // MetaGPT python版是寫 react()
-    // self.set_todo(None)
-    // self.publish_message(rsp)
+
+    this.publishMsg(result);
+    this.setTodo(null);
 
     return result;
   }
@@ -152,7 +153,7 @@ export class Role {
     // 在這個時候，roleContext中的msgBuffer已經有 user input
 
     // TODO: 理論上應該不用return東西？因為_observe() 應該只是觀察並操作到roleContext
-    return news.length;
+    return this.roleContext.news.length;
   }
 
   async act() {
@@ -220,7 +221,6 @@ export class Role {
   }
 
   async _actByOrder() {
-    console.log("act by order");
     const startIdx = this.roleContext.state >= 0 ? this.roleContext.state : 0;
     let resMsg = new Message({ content: "No actions taken yet" });
     for (let i = startIdx; i < this.actions.length; i++) {

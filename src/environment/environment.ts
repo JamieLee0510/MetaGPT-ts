@@ -9,9 +9,11 @@ import { MESSAGE_ROUTE_TO_ALL } from "src/utils/msg-const";
 export class Environment {
   desc: string; // the description of this environment
   roles: Map<string, Role>;
+  history: string;
   constructor({ desc }: { desc?: string }) {
     this.desc = desc ? desc : "";
     this.roles = new Map();
+    this.history = "";
   }
 
   /**
@@ -72,5 +74,6 @@ export class Environment {
     if (!found) {
       throw new Error(`Message no recipients: ${JSON.stringify(msg)}`);
     }
+    this.history += `\n${msg.role}: ${msg.content}`;
   }
 }
