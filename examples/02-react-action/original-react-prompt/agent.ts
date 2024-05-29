@@ -74,7 +74,6 @@ export class Agent {
       { role: "system", content: this.systemPrompt },
       { role: "user", content: qText },
     ] as ChatCompletionMessageParam[];
-    // TODO: InternLM2Chat 和 OpenAI 的 SDK 入參不一樣
     const completion = await this.model.chat.completions.create({
       messages,
       model: "gpt-4",
@@ -88,7 +87,7 @@ export class Agent {
 
     const newMessages = [
       ...messages,
-      { role: "user", content: responseText }, // TODO: 這邊的role是要修改嗎？
+      { role: "user", content: responseText },
     ] as ChatCompletionMessageParam[];
     const resultCompletion = await this.model.chat.completions.create({
       messages: newMessages,

@@ -1,6 +1,6 @@
 {
   "name": "metagpt",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "The Multi-Agent Framework",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

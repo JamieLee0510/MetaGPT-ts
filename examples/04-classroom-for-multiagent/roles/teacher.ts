@@ -17,7 +17,6 @@ export class Teacher extends Role {
     }, "");
     const poemText = await new ReviewPoem().run(allMsgText);
 
-    // TODO: Message 除了content str之外，還需要加上 role、causeBy(todo type)等等
     const newMsg = new Message({
       content: poemText,
       role: this.profile,
