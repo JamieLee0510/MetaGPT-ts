@@ -14,10 +14,10 @@
 import OpenAI from "openai";
 
 import { Message } from "src/schema/message";
-import { Action } from "src/action/action";
 import { Environment, RoleContext, RoleReactMode } from "./role-context";
 import { OPENAI_KEY } from "src/utils/keys";
 import { generatePrefixPrompt, generateStatePrompt } from "src/utils/prompt";
+import { UserRequirement, Action } from "src/action";
 
 export class Role {
   name: string;
@@ -50,6 +50,9 @@ export class Role {
     this.latestObservedMsg = null;
     this.llmClient = new OpenAI({ apiKey: OPENAI_KEY });
     this.isRecovered = false; // TODO:
+
+    // default watch UserRequirement
+    this._watch([UserRequirement]);
   }
 
   setActions(actionArr: Action[]) {
@@ -61,16 +64,25 @@ export class Role {
     this.roleContext.reactMode = mode;
   }
 
-  async run(withMsg?: any) {
+  async run(withMsg?: string | Array<string>) {
     let msg = null;
-
     // 把user msg 放到 roleContext的 message buffer å中
     if (withMsg) {
-      // TODO:
+      msg = new Message({ content: "" });
       if (typeof withMsg == "string") {
-        msg = new Message({ content: withMsg });
-        this.putMessage(msg);
+        msg.content = withMsg;
+      } else if (Array.isArray(withMsg)) {
+        const str = withMsg.reduce((arr, curr) => {
+          arr += `\n ${curr}`;
+          return arr;
+        }, "");
+        msg.content = str;
       }
+      console.log(msg);
+      if (!msg.causeBy) {
+        msg.causeBy = new UserRequirement().constructor.name;
+      }
+      this.putMessage(msg);
     }
     // 觀察，並根據觀察結果進行「思考」和「行動」
     // 將該role所需要的message都處理，

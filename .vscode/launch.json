@@ -10,7 +10,7 @@
           "tsconfig-paths/register"
         ],
         "args": [
-          "${workspaceFolder}/examples/04-classroom-for-multiagent/index.ts"
+          "${workspaceFolder}/examples/01-simple-coder/index.ts"
         ],
         "runtimeExecutable": "ts-node",
       }
