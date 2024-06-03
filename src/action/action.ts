@@ -26,7 +26,14 @@ export class Action {
     return data;
   }
 
-  async run(instruction: string): Promise<string> {
+  async run(instruction: string, ...args: any[]): Promise<string> {
     return "hihi";
   }
 }
+
+export class UserRequiredAction extends Action {
+  constructor() {
+    super("UserRequirement");
+  }
+}
+export const UserRequiredActionFlag = "UserRequirement";

@@ -1,4 +1,7 @@
+import { MESSAGE_ROUTE_TO_ALL } from "src/utils/msg-const";
 import { Environment, Role } from "src/role";
+import { Message } from "src/schema";
+import { UserRequiredActionFlag } from "src/action";
 
 export class Team {
   env: Environment;
@@ -20,14 +23,27 @@ export class Team {
     // TODO: costManager
   }
 
-  runProject(idea: string, sendTo?: string) {}
+  runProject(idea: string, sendTo?: string) {
+    this.idea = idea;
+    const message = new Message({
+      content: idea,
+      role: "Human",
+      causeBy: UserRequiredActionFlag,
+      sendTo: sendTo ? sendTo : MESSAGE_ROUTE_TO_ALL,
+    });
+    this.env.publishMessage(message);
+  }
 
-  run(nRound = 3, idea = "", sendTo = "") {
+  async run(nRound = 3, idea = "", sendTo = "") {
     if (idea) {
-      this.runProject(idea);
+      this.runProject(idea, sendTo);
     }
-
-    while (nRound > 0) {}
+    let countingRound = nRound;
+    while (countingRound > 0) {
+      // TODO: check balence
+      await this.env.run();
+      countingRound--;
+    }
     return this.env.history;
   }
 }

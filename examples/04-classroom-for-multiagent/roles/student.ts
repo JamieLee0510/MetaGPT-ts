@@ -1,4 +1,4 @@
-import { Message, Role, UserRequirement } from "metagpt";
+import { Message, Role, UserRequiredAction } from "metagpt";
 import { WritePoem } from "../actions/writePoem";
 import { ReviewPoem } from "../actions/reviewPoem";
 
@@ -6,7 +6,7 @@ export class Student extends Role {
   constructor() {
     super({ name: "xiaoming", profile: "Student" });
     this.setActions([new WritePoem()]);
-    this._watch([UserRequirement, ReviewPoem]);
+    this._watch([UserRequiredAction, ReviewPoem]);
   }
 
   async _act() {

@@ -10,7 +10,7 @@
           "tsconfig-paths/register"
         ],
         "args": [
-          "${workspaceFolder}/examples/01-simple-coder/index.ts"
+          "${workspaceFolder}/examples/05-simple-code-team/index.ts"
         ],
         "runtimeExecutable": "ts-node",
       }
