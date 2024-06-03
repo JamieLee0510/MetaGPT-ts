@@ -309,7 +309,8 @@ export class Role {
    */
   _watch(actions: (new () => Action)[]) {
     actions.forEach((action) => {
-      this.roleContext.watch.add(action.name);
+      const actionInstance = new action();
+      this.roleContext.watch.add(actionInstance.name);
     });
   }
 

@@ -1,0 +1,13 @@
+{
+  "name": "04-simple-coder",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "example06": "ts-node -r tsconfig-paths/register index.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {},
+  "devDependencies": {}
+}
