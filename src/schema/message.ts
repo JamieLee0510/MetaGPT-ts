@@ -4,7 +4,7 @@ import { v4 as uuidV4 } from "uuid";
 export class Message {
   id: string;
   content: string;
-  role?: string;
+  role?: string; // system / user / assistant
   sendTo?: string;
   causeBy?: string;
   // TODO: sentFrom
@@ -27,6 +27,8 @@ export class Message {
 
     if (role) {
       this.role = role;
+    } else {
+      this.role = "user";
     }
 
     this.sendTo = sendTo ? sendTo : MESSAGE_ROUTE_TO_ALL;

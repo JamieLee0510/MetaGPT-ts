@@ -22,6 +22,7 @@ class WriteSimpleCode extends Action {
   async run(instruction: string) {
     const prompt = this.promptTemplate.replace("{instruction}", instruction);
     const result = (await this.getResultFromLLM(prompt)) as string;
+    console.log("action result:", result);
     const codeText = WriteSimpleCode.parseCode(result);
     return codeText;
   }
@@ -55,7 +56,7 @@ const startJob = async () => {
   const userMsg = "write a function that caculates the sum of a list";
   const simpleColder = new SimpleCoder();
   const result = await simpleColder.run(userMsg);
-  console.log(result!.content);
+  console.log(result?.content);
 };
 
 startJob();

@@ -14,10 +14,10 @@
 import OpenAI from "openai";
 
 import { Message } from "src/schema/message";
-import { Action } from "src/action/action";
 import { Environment, RoleContext, RoleReactMode } from "./role-context";
 import { OPENAI_KEY } from "src/utils/keys";
 import { generatePrefixPrompt, generateStatePrompt } from "src/utils/prompt";
+import { UserRequiredActionFlag, Action } from "src/action";
 
 export class Role {
   name: string;
@@ -50,6 +50,8 @@ export class Role {
     this.latestObservedMsg = null;
     this.llmClient = new OpenAI({ apiKey: OPENAI_KEY });
     this.isRecovered = false; // TODO:
+
+    // TODO: does _watch need init default?
   }
 
   setActions(actionArr: Action[]) {
@@ -61,16 +63,24 @@ export class Role {
     this.roleContext.reactMode = mode;
   }
 
-  async run(withMsg?: any) {
+  async run(withMsg?: string | Array<string>) {
     let msg = null;
-
     // 把user msg 放到 roleContext的 message buffer å中
     if (withMsg) {
-      // TODO:
+      msg = new Message({ content: "" });
       if (typeof withMsg == "string") {
-        msg = new Message({ content: withMsg });
-        this.putMessage(msg);
+        msg.content = withMsg;
+      } else if (Array.isArray(withMsg)) {
+        const str = withMsg.reduce((arr, curr) => {
+          arr += `\n ${curr}`;
+          return arr;
+        }, "");
+        msg.content = str;
       }
+      if (!msg.causeBy) {
+        msg.causeBy = UserRequiredActionFlag;
+      }
+      this.putMessage(msg);
     }
     // 觀察，並根據觀察結果進行「思考」和「行動」
     // 將該role所需要的message都處理，
@@ -259,8 +269,22 @@ export class Role {
 
   // might overwrite while Instantiating
   async _act(): Promise<Message> {
-    const message = new Message({ content: "hihi" });
-    return message;
+    const previousHistory = this.roleContext.history();
+    const contextStr = JSON.stringify(
+      previousHistory.map(
+        (historyMsg) => `${historyMsg.role}:${historyMsg.content}`,
+      ),
+    );
+    const todo = this.roleContext.todo as Action;
+    const result = await todo.run(contextStr);
+
+    // TODO: Message & ActionNode
+
+    const newMsg = new Message({
+      content: result,
+      causeBy: todo.constructor.name,
+    });
+    return newMsg;
   }
 
   /**
@@ -285,7 +309,8 @@ export class Role {
    */
   _watch(actions: (new () => Action)[]) {
     actions.forEach((action) => {
-      this.roleContext.watch.add(action.name);
+      const actionInstance = new action();
+      this.roleContext.watch.add(actionInstance.name);
     });
   }
 
