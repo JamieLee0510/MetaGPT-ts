@@ -15,7 +15,7 @@ import OpenAI from "openai";
 
 import { Message } from "src/schema/message";
 import { Environment, RoleContext, RoleReactMode } from "./role-context";
-import { OPENAI_KEY } from "src/utils/keys";
+import { OPENAI_API_KEY } from "src/utils/keys";
 import { generatePrefixPrompt, generateStatePrompt } from "src/utils/prompt";
 import { UserRequiredActionFlag, Action } from "src/action";
 
@@ -48,7 +48,7 @@ export class Role {
     this.actions = [];
     this.roleContext = new RoleContext();
     this.latestObservedMsg = null;
-    this.llmClient = new OpenAI({ apiKey: OPENAI_KEY });
+    this.llmClient = new OpenAI({ apiKey: OPENAI_API_KEY });
     this.isRecovered = false; // TODO:
 
     // TODO: does _watch need init default?

@@ -1,4 +1,4 @@
-import { OPENAI_KEY } from "../utils/keys";
+import { OPENAI_API_KEY } from "../utils/keys";
 import OpenAI from "openai";
 
 export class Action {
@@ -8,7 +8,7 @@ export class Action {
   constructor(name: string, promptTemplate?: string) {
     this.name = name;
     // TODO: current use openai sdk
-    this.llmClient = new OpenAI({ apiKey: OPENAI_KEY });
+    this.llmClient = new OpenAI({ apiKey: OPENAI_API_KEY });
     this.promptTemplate = promptTemplate
       ? promptTemplate
       : "You are a helpful assistant.";

@@ -1,6 +1,6 @@
 import OpenAI from "openai";
 import { Tool } from "./tool";
-import { OPENAI_KEY } from "./const";
+import { OPENAI_API_KEY } from "./const";
 import { generateSysPrompt, generateToolDesc } from "./helper";
 import { ChatCompletionMessageParam } from "openai/resources";
 
@@ -14,7 +14,7 @@ export class Agent {
     this.path = path;
     this.tool = new Tool();
     this.systemPrompt = this.buildSystemInput();
-    this.model = new OpenAI({ apiKey: OPENAI_KEY });
+    this.model = new OpenAI({ apiKey: OPENAI_API_KEY });
   }
 
   /**
