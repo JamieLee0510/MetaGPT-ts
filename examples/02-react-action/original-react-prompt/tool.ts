@@ -1,4 +1,4 @@
-import { SERPER_KEY, OPENAI_KEY } from "./const";
+import { SERPER_KEY, OPENAI_API_KEY } from "./const";
 import axios from "axios";
 
 export type ToolConfig = {

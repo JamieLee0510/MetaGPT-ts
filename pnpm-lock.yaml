@@ -8,6 +8,12 @@ importers:
 
   .:
     dependencies:
+      '@google/generative-ai':
+        specifier: ^0.12.0
+        version: 0.12.0
+      ollama:
+        specifier: ^0.5.1
+        version: 0.5.1
       openai:
         specifier: ^4.47.1
         version: 4.47.1
@@ -76,6 +82,10 @@ importers:
         version: 3.0.11
 
   examples/04-classroom-for-multiagent: {}
+
+  examples/05-simple-code-team: {}
+
+  examples/06-software-company: {}
 
 packages:
 
@@ -352,6 +362,11 @@ packages:
     resolution: {integrity: sha512-niBqk8iwv96+yuTwjM6bWg8ovzAPF9qkICsGtcoa5/dmqcEMfdwNAX7+/OHcJHc7wj7XqPxH98oAHytFYlw6Sw==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
     dev: true
+
+  /@google/generative-ai@0.12.0:
+    resolution: {integrity: sha512-krWjurjEUHSFhCX4lGHMOhbnpBfYZGU31mpHpPBQwcfWm0T+/+wxC4UCAJfkxxc3/HvGJVG8r4AqrffaeDHDlA==}
+    engines: {node: '>=18.0.0'}
+    dev: false
 
   /@humanwhocodes/config-array@0.13.0:
     resolution: {integrity: sha512-DZLEEqFWQFiyK6h5YIeynKx7JlvCYWL0cImfSRXZ9l4Sg2efkFGTuFf6vzXjK1cq6IYkU+Eg/JizXw+TD2vRNw==}
@@ -1866,6 +1881,12 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
+  /ollama@0.5.1:
+    resolution: {integrity: sha512-mAiCHxdvu63E8EFopz0y82QG7rGfYmKAWgmjG2C7soiRuz/Sj3r/ebvCOp+jasiCubqUPE0ZThKT5LR6wrrPtA==}
+    dependencies:
+      whatwg-fetch: 3.6.20
+    dev: false
+
   /once@1.4.0:
     resolution: {integrity: sha512-lNaJgI+2Q5URQBkccEKHTQOPaXdUxnZZElQTZY0MFUAuaEqe1E+Nyvgdz/aIyNi6Z9MzO5dv1H8n58/GELp3+w==}
     dependencies:
@@ -2552,6 +2573,10 @@ packages:
   /webidl-conversions@4.0.2:
     resolution: {integrity: sha512-YQ+BmxuTgd6UXZW3+ICGfyqRyHXVlD5GtQr5+qjiNW7bF0cqrzX500HVXPBOvgXb5YnzDd+h0zqyv61KUD7+Sg==}
     dev: true
+
+  /whatwg-fetch@3.6.20:
+    resolution: {integrity: sha512-EqhiFU6daOA8kpjOWTL0olhVOF3i7OrFzSYiGsEMB8GcXS+RrzauAERX65xMeNWVqxA6HXH2m69Z9LaKKdisfg==}
+    dev: false
 
   /whatwg-url@5.0.0:
     resolution: {integrity: sha512-saE57nupxk6v3HY35+jzBwYa0rKSy0XR8JSxZPwgLr7ys0IBzhGviA1/TUGJLmSVqs8pb9AnvICXEuOHLprYTw==}

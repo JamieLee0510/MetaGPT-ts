@@ -37,7 +37,7 @@ $ npm install metagpt
 create `.env` file:
 
 ```
-OPENAI_KEY=sk-xxxx
+OPENAI_API_KEY=sk-xxxx
 ```
 
 (Currently just use OpenAI api as LLM response client)
