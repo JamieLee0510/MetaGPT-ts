@@ -5,7 +5,7 @@
  * 3. 編寫對應的程式碼 -- Action: WriteSimpleCode
  */
 
-import { Action } from "metagpt";
+import { Action, UserRequiredAction } from "metagpt";
 import { Role } from "metagpt";
 import { Message } from "metagpt";
 
@@ -28,7 +28,7 @@ class WriteSimpleCode extends Action {
   }
 
   static parseCode(result: string) {
-    const pattern = /'''python([\s\S]*?)'''/;
+    const pattern = /```python([\s\S]*?)```/;
     const match = result.match(pattern);
     const codeText = match ? match[1] : result;
     return codeText;
@@ -39,6 +39,7 @@ class SimpleCoder extends Role {
   constructor() {
     super({ name: "Alice", profile: "SimpleCoder" });
     this.setActions([new WriteSimpleCode()]);
+    this._watch([UserRequiredAction]);
   }
 
   async _act() {
